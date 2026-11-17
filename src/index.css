@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-graphite: #111827;
+    --color-slate-deep: #183B56;
+    --color-signal-blue: #2563EB;
+    --color-surface-soft: #F5F6F8;
+    --color-surface-white: #FFFFFF;
+    --color-border: #E2E6EC;
+    --color-muted: #64748B;
+    --color-success: #15966B;
+    --color-warning: #D97706;
+    --color-danger: #DC2626;
+    --color-ai: #6557C8;
+  }
+
+  body {
+    background-color: var(--color-surface-soft);
+    color: var(--color-graphite);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F1F5F9;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle code diff highlighting */
+.diff-del {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border-left: 3px solid #DC2626;
+}
+
+.diff-add {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border-left: 3px solid #15966B;
+}
+
+.diff-match {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border-left: 3px solid #D97706;
+}
