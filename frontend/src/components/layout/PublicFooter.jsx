@@ -12,12 +12,8 @@ export default function PublicFooter() {
           <div className="md:col-span-1 space-y-3">
             <BrandLogo size="md" />
             <p className="text-xs text-muted leading-relaxed">
-              Secure AI-Powered Hackathon Hosting & Automated Evaluation Engine. Bringing structural AST verification, container sandboxing, and objective rubric scoring to competitive technology events.
+              A shared place to organize hackathons, submit projects, review work, and share results.
             </p>
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-deep pt-1">
-              <span className="w-2 h-2 rounded-full bg-brand-success"></span>
-              <span>ENGINE STATUS: OPERATIONAL</span>
-            </div>
           </div>
 
           {/* Platform */}
@@ -78,27 +74,27 @@ export default function PublicFooter() {
             </ul>
           </div>
 
-          {/* Technology & Compliance */}
+          {/* Review tools */}
           <div className="space-y-2.5">
             <h4 className="text-xs font-bold text-graphite uppercase tracking-wider font-mono">
-              Architecture
+              Review tools
             </h4>
             <ul className="space-y-2 text-xs text-muted">
               <li className="flex items-center gap-1.5">
                 <Cpu className="w-3.5 h-3.5 text-signal-blue" />
-                <span>Docker Sandbox Isolation</span>
+                <span>Project test runs</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <GitBranch className="w-3.5 h-3.5 text-brand-ai" />
-                <span>AST Semantic Graph Diff</span>
+                <span>Code similarity review</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-brand-success" />
-                <span>Non-repudiable Evaluation Audit</span>
+                <span>Shared judging rubrics</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Terminal className="w-3.5 h-3.5 text-slate-deep" />
-                <span>Verifiable Container Logs</span>
+                <span>Submission review history</span>
               </li>
             </ul>
           </div>
@@ -107,7 +103,7 @@ export default function PublicFooter() {
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted gap-4">
           <div>
-            © {new Date().getFullYear()} HackGuard AI Engine. All rights reserved. Built for universities, enterprises & global competitions.
+            © {new Date().getFullYear()} HackGuard. Built to make hackathons easier to run and fairer to judge.
           </div>
           <div className="flex items-center gap-6">
             <a
@@ -119,11 +115,9 @@ export default function PublicFooter() {
               <span>GitHub Repository</span>
               <ExternalLink className="w-3 h-3" />
             </a>
-            <span className="font-mono text-[11px] text-slate-deep">SECURE-BUILD-v2.4.9</span>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-
