@@ -1,0 +1,16 @@
+{
+  "team1": {
+    "code": {
+      "score": 0,
+      "feedback": "No code file was uploaded, so cannot evaluate."
+    },
+    "report": {
+      "score": 0,
+      "feedback": "No report file was uploaded, so cannot evaluate."
+    },
+    "video": {
+      "score": 0,
+      "feedback": "No video file was uploaded, so cannot evaluate."
+    }
+  }
+}
