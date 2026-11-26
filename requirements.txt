@@ -3,7 +3,6 @@ langchain-groq
 langgraph
 fastapi
 uvicorn
-python-multipart
 pypdf
 python-dotenv
 groq
