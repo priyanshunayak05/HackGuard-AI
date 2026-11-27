@@ -1,0 +1,32 @@
+{
+  "name": "anthophila",
+  "version": "1.0.0",
+  "description": "Hackathon automation system",
+  "keywords": [
+    "Express",
+    "TypeScript",
+    "PostgreSQL"
+  ],
+  "homepage": "https://github.com/priyanshunayak05/HackGuard-AI#readme",
+  "bugs": {
+    "url": "https://github.com/priyanshunayak05/HackGuard-AI/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/priyanshunayak05/HackGuard-AI.git"
+  },
+  "license": "MIT",
+  "author": "Gourav Sharma",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node --env-file=.env main.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.1"
+  }
+}

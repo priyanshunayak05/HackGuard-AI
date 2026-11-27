@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { HackathonProvider } from './context/HackathonContext';
 import { ToastProvider } from './components/common/Toast';
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 // Layouts
 import AdminLayout from './components/layout/AdminLayout';
@@ -62,45 +63,52 @@ export default function App() {
               <Route path="/hackathons/:id" element={<HackathonDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-
-              {/* Admin Workspace Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="hackathons" element={<AdminHackathons />} />
-                <Route path="hackathons/create" element={<CreateHackathonPage />} />
-                <Route path="participants" element={<AdminParticipants />} />
-                <Route path="teams" element={<AdminTeams />} />
-                <Route path="submissions" element={<AdminSubmissions />} />
-                <Route path="evaluation-queue" element={<AdminEvaluationQueue />} />
-                <Route path="judges" element={<AdminJudges />} />
-                <Route path="plagiarism" element={<AdminPlagiarismReview />} />
-                <Route path="leaderboard" element={<AdminLeaderboard />} />
-                <Route path="analytics" element={<AdminAnalytics />} />
-                <Route path="settings" element={<AdminSettings />} />
+              
+              {/* Admin Workspace - Admin Only */}
+              <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+                  <Route path="/admin" element={<AdminLayout />}>
+                      <Route index element={<AdminDashboard />} />
+                      <Route path="hackathons" element={<AdminHackathons />} />
+                      <Route path="hackathons/create" element={<CreateHackathonPage />} />
+                      <Route path="participants" element={<AdminParticipants />} />
+                      <Route path="teams" element={<AdminTeams />} />
+                      <Route path="submissions" element={<AdminSubmissions />} />
+                      <Route path="evaluation-queue" element={<AdminEvaluationQueue />} />
+                      <Route path="judges" element={<AdminJudges />} />
+                      <Route path="plagiarism" element={<AdminPlagiarismReview />} />
+                      <Route path="leaderboard" element={<AdminLeaderboard />} />
+                      <Route path="analytics" element={<AdminAnalytics />} />
+                      <Route path="settings" element={<AdminSettings />} />
+                  </Route>
               </Route>
 
-              {/* Participant Workspace Routes */}
-              <Route path="/participant" element={<ParticipantLayout />}>
-                <Route index element={<ParticipantWorkspace />} />
-                <Route path="discover" element={<ParticipantDiscover />} />
-                <Route path="registrations" element={<ParticipantRegistrations />} />
-                <Route path="team" element={<ParticipantTeam />} />
-                <Route path="submissions" element={<ParticipantSubmissions />} />
-                <Route path="results" element={<ParticipantResults />} />
-                <Route path="leaderboard" element={<ParticipantLeaderboard />} />
-                <Route path="profile" element={<ParticipantProfile />} />
+              {/* Participant Workspace - Candidate Only */}
+              <Route element={<ProtectedRoute allowedRoles={["participant"]} />}>
+                  <Route path="/participant" element={<ParticipantLayout />}>
+                      <Route index element={<ParticipantWorkspace />} />
+                      <Route path="discover" element={<ParticipantDiscover />} />
+                      <Route path="registrations" element={<ParticipantRegistrations />} />
+                      <Route path="team" element={<ParticipantTeam />} />
+                      <Route path="submissions" element={<ParticipantSubmissions />} />
+                      <Route path="results" element={<ParticipantResults />} />
+                      <Route path="leaderboard" element={<ParticipantLeaderboard />} />
+                      <Route path="profile" element={<ParticipantProfile />} />
+                  </Route>
               </Route>
 
-              {/* Judge Workspace Routes */}
-              <Route path="/judge" element={<JudgeLayout />}>
-                <Route index element={<JudgeOverview />} />
-                <Route path="assigned" element={<JudgeAssignedEvents />} />
-                <Route path="review-queue" element={<JudgeReviewQueue />} />
-                <Route path="project/:id" element={<JudgeProjectDetail />} />
-                <Route path="evaluated" element={<JudgeEvaluatedProjects />} />
-                <Route path="feedback-history" element={<JudgeFeedbackHistory />} />
-                <Route path="profile" element={<JudgeProfile />} />
+              {/* Judge Workspace - Judge Only */}
+              <Route element={<ProtectedRoute allowedRoles={["judge"]} />}>
+                  <Route path="/judge" element={<JudgeLayout />}>
+                      <Route index element={<JudgeOverview />} />
+                      <Route path="assigned" element={<JudgeAssignedEvents />} />
+                      <Route path="review-queue" element={<JudgeReviewQueue />} />
+                      <Route path="project/:id" element={<JudgeProjectDetail />} />
+                      <Route path="evaluated" element={<JudgeEvaluatedProjects />} />
+                      <Route path="feedback-history" element={<JudgeFeedbackHistory />} />
+                      <Route path="profile" element={<JudgeProfile />} />
+                  </Route>
               </Route>
+
 
               {/* Fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />

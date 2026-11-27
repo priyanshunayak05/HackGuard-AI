@@ -14,19 +14,20 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Header({ title, subtitle, rightActions }) {
-  const { user, role, switchRole } = useAuth();
+  const { user, role, logout } = useAuth();
   const { hackathons, activeHackathonId, changeActiveHackathon, isLiveConnected, setIsLiveConnected } = useHackathon();
-  const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showHackathonMenu, setShowHackathonMenu] = useState(false);
   const navigate = useNavigate();
 
-  const handleRoleChange = (newRole) => {
-    switchRole(newRole);
-    setShowRoleMenu(false);
-    if (newRole === 'admin') navigate('/admin');
-    else if (newRole === 'participant') navigate('/participant');
-    else if (newRole === 'judge') navigate('/judge');
-  };
+  <button
+    onClick={() => {
+        logout();
+        navigate("/login", { replace: true });
+    }}
+    className="px-3 py-2 rounded-md text-xs font-medium border border-border-subtle hover:bg-surface-soft"
+>
+    Logout
+</button>
 
   const activeHackathon = hackathons.find((h) => h.id === activeHackathonId) || hackathons[0];
 
@@ -113,74 +114,6 @@ export default function Header({ title, subtitle, rightActions }) {
             {isLiveConnected ? 'SOCKET: LIVE' : 'SOCKET: IDLE'}
           </span>
         </button>
-
-        {/* Dynamic Role Switcher (Crucial for evaluation workflow testing) */}
-        <div className="relative">
-          <button
-            onClick={() => setShowRoleMenu(!showRoleMenu)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-deep text-white hover:bg-slate-800 transition-colors shadow-xs"
-          >
-            <span className="text-[11px] font-mono text-blue-200 uppercase tracking-wider">ROLE:</span>
-            <span className="capitalize font-semibold">{role}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-blue-300" />
-          </button>
-
-          {showRoleMenu && (
-            <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setShowRoleMenu(false)}
-              />
-              <div className="absolute right-0 mt-1 w-56 bg-surface-white border border-border-subtle rounded-md shadow-dropdown py-1 z-50">
-                <div className="px-3 py-1.5 text-[10px] font-semibold text-muted uppercase tracking-wider border-b border-border-subtle">
-                  Experience Command Center as:
-                </div>
-                <button
-                  onClick={() => handleRoleChange('admin')}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-surface-soft ${
-                    role === 'admin' ? 'bg-blue-50/60 font-semibold text-signal-blue' : 'text-graphite'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-signal-blue" />
-                    <div>
-                      <div>Admin / Organizer</div>
-                      <div className="text-[10px] text-muted">Full competition control</div>
-                    </div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleRoleChange('participant')}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-surface-soft ${
-                    role === 'participant' ? 'bg-blue-50/60 font-semibold text-signal-blue' : 'text-graphite'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Code2 className="w-4 h-4 text-brand-ai" />
-                    <div>
-                      <div>Participant / Team</div>
-                      <div className="text-[10px] text-muted">Submissions & rankings</div>
-                    </div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleRoleChange('judge')}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-surface-soft ${
-                    role === 'judge' ? 'bg-blue-50/60 font-semibold text-signal-blue' : 'text-graphite'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <UserCheck className="w-4 h-4 text-brand-success" />
-                    <div>
-                      <div>Judge / Evaluator</div>
-                      <div className="text-[10px] text-muted">Scoring & AI calibration</div>
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </>
-          )}
-        </div>
 
         {/* Notifications Icon */}
         <button

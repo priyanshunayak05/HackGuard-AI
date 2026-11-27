@@ -8,25 +8,48 @@ import { useToast } from '../../components/common/Toast';
 import { ShieldCheck, UserCheck, Code2, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
-  const { login, switchRole } = useAuth();
+  const { login, logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('elena.rostova@hackguard.io');
-  const [password, setPassword] = useState('••••••••••••');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [role, setRole] = useState('admin');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      login(email, role);
-      toast(`Signed in successfully as ${role.toUpperCase()}.`, 'success');
-      navigate(`/${role}`);
-    }, 400);
-  };
+    setError('');
+
+    try {
+        const user = await login(email, password);
+
+        const actualRole = user.role === 'candidate'
+            ? 'participant'
+            : user.role;
+
+        if (actualRole !== role) {
+          logout();
+          setError(`This account is registered as ${actualRole}, not ${role}.`);
+          return;
+        }
+
+        toast(
+            `Signed in successfully as ${actualRole.toUpperCase()}.`,
+            'success'
+        );
+
+        navigate(`/${actualRole}`);
+
+    } catch (err) {
+        setError(err.message || 'Invalid email or password.');
+    } finally {
+        setLoading(false);
+    }
+};
 
   const handleQuickLogin = (selectedRole) => {
     switchRole(selectedRole);
@@ -123,38 +146,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Quick Preset Buttons for Evaluators */}
-          <div className="pt-4 border-t border-border-subtle space-y-2">
-            <div className="text-[11px] font-mono text-muted uppercase font-semibold text-center">
-              Instant Development Presets
-            </div>
-            <div className="space-y-1.5">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin')}
-                className="w-full text-left p-2 rounded bg-surface-soft hover:bg-blue-50/60 border border-border-subtle flex items-center justify-between text-xs transition-colors"
-              >
-                <span className="font-semibold text-graphite">Dr. Elena Rostova (Admin)</span>
-                <span className="text-[11px] font-mono text-signal-blue">Launch &rarr;</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('participant')}
-                className="w-full text-left p-2 rounded bg-surface-soft hover:bg-blue-50/60 border border-border-subtle flex items-center justify-between text-xs transition-colors"
-              >
-                <span className="font-semibold text-graphite">Alex Rivera (Team Nexus Lead)</span>
-                <span className="text-[11px] font-mono text-brand-ai">Launch &rarr;</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('judge')}
-                className="w-full text-left p-2 rounded bg-surface-soft hover:bg-blue-50/60 border border-border-subtle flex items-center justify-between text-xs transition-colors"
-              >
-                <span className="font-semibold text-graphite">Prof. Marcus Thorne (Lead Judge)</span>
-                <span className="text-[11px] font-mono text-brand-success">Launch &rarr;</span>
-              </button>
-            </div>
-          </div>
+          
         </div>
 
         <div className="text-center text-xs text-muted">

@@ -1,60 +1,116 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { mockUsers } from '../data/mockData';
+
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useState
+} from "react";
+
+import apiClient from "../services/api";
 
 const AuthContext = createContext(null);
 
+function mapRole(role) {
+    if (role === "candidate") return "participant";
+    return role;
+}
+
 export function AuthProvider({ children }) {
-  // Default to admin or saved role
-  const [role, setRole] = useState(() => {
-    return localStorage.getItem('hackguard_role') || 'admin';
-  });
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = useState(() => {
-    const savedRole = localStorage.getItem('hackguard_role') || 'admin';
-    return mockUsers[savedRole] || mockUsers.admin;
-  });
+    useEffect(() => {
+        const restoreSession = async () => {
+            const token = localStorage.getItem("hackguard_token");
 
-  const switchRole = (newRole) => {
-    if (!mockUsers[newRole]) return;
-    setRole(newRole);
-    setUser(mockUsers[newRole]);
-    localStorage.setItem('hackguard_role', newRole);
-    localStorage.setItem('hackguard_token', `hg_token_${newRole}_mock_signature`);
-  };
+            if (!token) {
+                setLoading(false);
+                return;
+            }
 
-  const login = (email, requestedRole = 'participant') => {
-    const chosenRole = mockUsers[requestedRole] ? requestedRole : 'participant';
-    setRole(chosenRole);
-    const updatedUser = {
-      ...mockUsers[chosenRole],
-      email: email || mockUsers[chosenRole].email,
+            try {
+                const response = await apiClient.get("/auth/me");
+
+                setUser(response.user);
+            } catch (error) {
+                localStorage.removeItem("hackguard_token");
+                localStorage.removeItem("hackguard_role");
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        restoreSession();
+    }, []);
+
+    const login = async (email, password) => {
+        const response = await apiClient.post("/auth/login", {
+            email,
+            password
+        });
+
+        localStorage.setItem(
+            "hackguard_token",
+            response.token
+        );
+
+        setUser(response.user);
+
+        return response.user;
     };
-    setUser(updatedUser);
-    localStorage.setItem('hackguard_role', chosenRole);
-    localStorage.setItem('hackguard_token', `hg_token_${chosenRole}_mock_signature`);
-  };
 
-  const logout = () => {
-    switchRole('participant');
-  };
+    const register = async (formData) => {
+        const response = await apiClient.post(
+            "/auth/signup",
+            formData
+        );
 
-  useEffect(() => {
-    localStorage.setItem('hackguard_role', role);
-    localStorage.setItem('hackguard_token', `hg_token_${role}_mock_signature`);
-  }, [role]);
+        localStorage.setItem(
+            "hackguard_token",
+            response.token
+        );
 
-  return (
-    <AuthContext.Provider value={{ user, role, switchRole, login, logout, isAuthenticated: true }}>
-      {children}
-    </AuthContext.Provider>
-  );
+        setUser(response.user);
+
+        return response.user;
+    };
+
+    const logout = () => {
+        localStorage.removeItem("hackguard_token");
+        localStorage.removeItem("hackguard_role");
+        localStorage.removeItem("hackguard_active_hackathon");
+
+        setUser(null);
+    };
+
+    const role = mapRole(user?.role);
+
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                role,
+                login,
+                register,
+                logout,
+                loading,
+                isAuthenticated: Boolean(user)
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+    const context = useContext(AuthContext);
 
+    if (!context) {
+        throw new Error(
+            "useAuth must be used within AuthProvider"
+        );
+    }
+
+    return context;
+}
