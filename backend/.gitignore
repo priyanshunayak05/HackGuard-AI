@@ -1,7 +1,11 @@
 <<<<<<< HEAD
 # Dependencies & Build Artifacts
 node_modules/
+.env
+.env.*
+!.env.example
 dist/
+build/
 dist-ssr/
 frontend/node_modules/
 frontend/dist/

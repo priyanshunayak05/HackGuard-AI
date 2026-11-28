@@ -11,28 +11,26 @@ APP.use(cors({
 }));
 APP.use(express.json({ limit: "1mb" }));
 
-APP.get("/health", (req, res) => {
-    res.status(200).json({
-        status: "OK",
-        message: "Express server is running"
-    });
-});
+
 APP.get("/", async (req, res) => {
     try {
         const result = await pool.query("SELECT NOW()");
 
-        res.status(200).json({
-            message: "SERVER HIT!!",
-            dbTime : result.rows[0].now
-        })
-    }catch(err) {
-        console.error(`ERROR: ${err}`)
+        res.json({
+            success: true,
+            message: "HackGuard AI backend is running",
+            database: "Connected to Supabase",
+            time: result.rows[0].now
+        });
+    } catch (error) {
+        console.error("Database connection error:", error);
+
         res.status(500).json({
-            message: "SERVER UNHEALTHY!!"
-        })
+            success: false,
+            message: "Database connection failed"
+        });
     }
-    
-})
+});
 
 // Authentication routes
 APP.use("/api/auth", authRoutes);
